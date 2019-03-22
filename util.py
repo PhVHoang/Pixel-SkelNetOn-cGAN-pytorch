@@ -35,5 +35,20 @@ def imshow(inp, title=None):
     plt.pause(5)  # pause a bit so that plots are updated
 
 
+def plot_result(train_hist):
+    y1 = train_hist['D_losses']
+    y2 = train_hist['G_losses']
+    x = range(len(train_hist['D_losses']))
 
+    plt.plot(x, y1, label='D_Losses')
+    plt.plot(x, y2, label='G_losses')
+
+    plt.xlabel("Iter")
+    plt.ylabel("Loss")
+
+    plt.legend(loc=4)
+    plt.grid(True)
+    plt.tight_layout()
+    plt.savefig("train_hist.png")
+    plt.close() 
 

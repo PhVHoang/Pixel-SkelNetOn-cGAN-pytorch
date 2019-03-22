@@ -110,7 +110,7 @@ for epoch in range(opt.train_epoch):
         D_train_loss.backward()
         D_optimizer.step()
 
-        #train_hist['D_losses'].append(D_train_loss.data[0])
+        train_hist['D_losses'].append(D_train_loss.data[0])
 
         D_losses.append(D_train_loss.data)
 
@@ -124,7 +124,7 @@ for epoch in range(opt.train_epoch):
         G_train_loss.backward()
         G_optimizer.step()
 
-        #train_hist['G_losses'].append(G_train_loss.data[0])
+        train_hist['G_losses'].append(G_train_loss.data[0])
         print("Generator loss: ", G_train_loss.data)
         G_losses.append(G_train_loss.data)
 
@@ -142,3 +142,10 @@ end_time = time.time()
 total_ptime = end_time - start_time
 train_hist['total_ptime'].append(total_ptime)
 print('total training time: ', total_ptime)
+
+print("Avg one epoch ptime: %.2f, total %d epochs ptime: %.2f" % (torch.mean(torch.FloatTensor(train_hist['per_epoch_ptimes'])), opt.train_epoch, total_ptime))
+print("Training finish!... save training results")
+torch.save(G.state_dict(), root + model + 'generator_param.pkl')
+torch.save(D.state_dict(), root + model + 'discriminator_param.pkl')
+
+util.plot_result(train_hist)
