@@ -88,7 +88,6 @@ class discriminator(nn.Module):
 
     # forward method
     def forward(self, input, label):
-        print('input shape = {}\nlabel shape = {}'.format(input.shape, label.shape))
         x = torch.cat([input, label], 1)
         x = F.leaky_relu(self.conv1(x), 0.2)
         x = F.leaky_relu(self.conv2_bn(self.conv2(x)), 0.2)

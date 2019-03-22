@@ -17,7 +17,7 @@ parser.add_argument('--ndf', type=int, default=64)
 # parser.add_argument('--crop_size', type=int, default=256, help='crop size (0 is false)')
 # parser.add_argument('--resize_scale', type=int, default=286, help='resize scale (0 is false)')
 # parser.add_argument('--fliplr', type=bool, default=True, help='random fliplr True or False')
-parser.add_argument('--train_epoch', type=int, default=200, help='number of train epochs')
+parser.add_argument('--train_epoch', type=int, default=50, help='number of train epochs')
 parser.add_argument('--lrD', type=float, default=0.0002, help='learning rate, default=0.0002')
 parser.add_argument('--lrG', type=float, default=0.0002, help='learning rate, default=0.0002')
 parser.add_argument('--L1_lambda', type=float, default=100, help='lambda for L1 loss')
@@ -46,7 +46,6 @@ train_loader = util.load_data(opt.dataset, opt.train_subfolder, transform, opt.b
 test_loader = util.load_data(opt.dataset, opt.test_subfolder, transform, opt.batch_size, shuffle=True)
 test = test_loader.__iter__().__next__()[0]
 img_size = test.size()[2]
-print('image size = {}'.format(img_size))
 
 
 if opt.inverse_order:
@@ -97,7 +96,6 @@ for epoch in range(opt.train_epoch):
             x_ = x_[:, :, :, 0:img_size]
 
         x_, y_ = torch.Tensor(x_).cuda(), torch.Tensor(y_).cuda()
-        print('x_.shape = {}\ny_.shape={}'.format(x_.shape, y_.shape))
         D_result = D(x_, y_).squeeze()
         D_real_loss = BCE_Loss(D_result, torch.Tensor(torch.ones(D_result.size())).cuda())
 
@@ -106,11 +104,10 @@ for epoch in range(opt.train_epoch):
         D_fake_loss = BCE_Loss(D_result, torch.Tensor(torch.zeros(D_result.size())).cuda())
 
         D_train_loss = (D_real_loss + D_fake_loss) * 0.5
-        print("Discriminator loss: ", D_train_loss.data)
         D_train_loss.backward()
         D_optimizer.step()
 
-        train_hist['D_losses'].append(D_train_loss.data[0])
+        train_hist['D_losses'].append(D_train_loss.data)
 
         D_losses.append(D_train_loss.data)
 
@@ -124,8 +121,7 @@ for epoch in range(opt.train_epoch):
         G_train_loss.backward()
         G_optimizer.step()
 
-        train_hist['G_losses'].append(G_train_loss.data[0])
-        print("Generator loss: ", G_train_loss.data)
+        train_hist['G_losses'].append(G_train_loss.data)
         G_losses.append(G_train_loss.data)
 
         num_iter += 1
