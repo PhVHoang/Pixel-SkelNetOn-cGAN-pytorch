@@ -5,8 +5,6 @@ from torchvision import transforms
 import argparse
 import matplotlib.pyplot as plt
 import os
-if not os.path.isdir(opt.dataset + '_results/test_results'):
-    os.mkdir(opt.dataset + '_results/test_results')
 
 model_path = 'train_img_results/train_img_generator_param.pkl'
 
@@ -15,6 +13,9 @@ parser.add_argument('--dataset', required=False, default='train_img',  help='')
 parser.add_argument('--test_subfolder', required=False, default='test',  help='')
 parser.add_argument('--ngf', type=int, default=64)
 opt = parser.parse_args()
+
+if not os.path.isdir(opt.dataset + '_results/test_results'):
+    os.mkdir(opt.dataset + '_results/test_results')
 
 transform = transforms.Compose([
         transforms.ToTensor(),
