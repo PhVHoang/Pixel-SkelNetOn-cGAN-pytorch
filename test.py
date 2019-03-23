@@ -4,6 +4,9 @@ import network
 from torchvision import transforms
 import argparse
 import matplotlib.pyplot as plt
+import os
+if not os.path.isdir(opt.dataset + '_results/test_results'):
+    os.mkdir(opt.dataset + '_results/test_results')
 
 model_path = 'train_img_results/train_img_generator_param.pkl'
 
@@ -35,9 +38,9 @@ for x_, _ in test_loader:
     s_ind = len(s) - s.find('/')
     e_ind = len(s) - s.find('.')
     ind = test_loader.dataset.imgs[n][0][s_ind:e_ind-1]
-    path = opt.dataset + '_results/test_results/' + ind + '_input.png'
-    plt.imsave(path, (x_[0].cpu().data.numpy().transpose(1, 2, 0) + 1) / 2)
-    path = opt.dataset + '_results/test_results/' + ind + '_output.png'
+    # path = opt.dataset + '_results/test_results/' + ind + '_input.png'
+    # plt.imsave(path, (x_[0].cpu().data.numpy().transpose(1, 2, 0) + 1) / 2)
+    path = opt.dataset + '_results/test_results/' + ind + '.png'
     plt.imsave(path, (test_image[0].cpu().data.numpy().transpose(1, 2, 0) + 1) / 2)
     path = opt.dataset + '_results/test_results/' + ind + '_target.png'
     plt.imsave(path, (y_[0].numpy().transpose(1, 2, 0) + 1) / 2)
